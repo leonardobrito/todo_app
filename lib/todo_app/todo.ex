@@ -1,9 +1,9 @@
 defmodule TodoApp.Todo do
-  alias TodoApp.Repo
-  alias TodoApp.Todo.TodoItem
+  alias TodoApp.{Repo, Todo}
+  alias Todo.TodoItem
 
   def list_todo_items() do
-    []
+    Repo.all(TodoItem)
   end
 
   def create_todo_item(attrs) do

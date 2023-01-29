@@ -7,4 +7,11 @@ defmodule TodoAppWeb.TodoItemControllerTest do
       assert html_response(conn, 200) =~ "Listing Todo Items."
     end
   end
+
+  describe "new todo_item" do
+    test "rends a form", %{conn: conn} do
+      conn = get(conn, Routes.todo_item_path(conn, :new))
+      assert html_response(conn, 200) =~ "New Todo Item."
+    end
+  end
 end

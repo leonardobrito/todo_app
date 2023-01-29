@@ -6,4 +6,8 @@ defmodule TodoAppWeb.TodoItemController do
     todo_items = Todo.list_todo_items()
     render(conn, "index.html", todo_items: todo_items)
   end
+
+  def new(conn, _params) do
+    render(conn, "new.html")
+  end
 end

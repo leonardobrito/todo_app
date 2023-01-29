@@ -12,10 +12,13 @@ defmodule TodoAppWeb.TodoItemController do
   end
 
   def create(conn, %{"todo_item" => todo_item_params}) do
-    {:ok, todo_item} = Todo.create_todo_item(todo_item_params)
+    case Todo.create_todo_item(todo_item_params) do
+      {:ok, todo_item} ->
+        redirect(conn, to: Routes.todo_item_path(conn, :show, todo_item))
 
-    conn
-    |> redirect(to: Routes.todo_item_path(conn, :show, todo_item))
+      {:error, %Ecto.Changeset{} = changeset} ->
+        render(conn, "new.html", changeset: changeset)
+    end
   end
 
   def show(conn, %{"id" => _id}) do

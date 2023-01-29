@@ -21,6 +21,7 @@ defmodule TodoAppWeb.Router do
     get "/todo_items", TodoItemController, :index
     get "/todo_items/new", TodoItemController, :new
     get "/todo_items/:id", TodoItemController, :show
+    get "/todo_items/:id/edit", TodoItemController, :edit
     post "/todo_items", TodoItemController, :create
   end
 

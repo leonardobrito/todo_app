@@ -24,4 +24,8 @@ defmodule TodoAppWeb.TodoItemController do
   def show(conn, %{"id" => _id}) do
     render(conn, "show.html")
   end
+
+  def edit(conn, %{"id" => _id}) do
+    render(conn, "edit.html")
+  end
 end

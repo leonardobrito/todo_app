@@ -1,5 +1,6 @@
 defmodule TodoAppWeb.TodoItemControllerTest do
   use TodoAppWeb.ConnCase
+  alias TodoApp.Todo
 
   @valid_todo_item_attrs %{
     body: "Some body",
@@ -10,6 +11,11 @@ defmodule TodoAppWeb.TodoItemControllerTest do
     body: nil,
     title: nil
   }
+
+  def fixture(:todo_item) do
+    {:ok, todo_item} = Todo.create_todo_item(@valid_todo_item_attrs)
+    todo_item
+  end
 
   describe "index" do
     test "list all to do items", %{conn: conn} do
@@ -39,5 +45,19 @@ defmodule TodoAppWeb.TodoItemControllerTest do
       conn = post(conn, Routes.todo_item_path(conn, :create), todo_item: @invalid_todo_item_attrs)
       assert html_response(conn, 200) =~ "New Todo Item."
     end
+  end
+
+  describe "edit todo_item" do
+    setup([:create_todo_item])
+
+    test "renders form for editing todo_item", %{conn: conn, todo_item: todo_item} do
+      conn = get(conn, Routes.todo_item_path(conn, :edit, todo_item))
+      assert html_response(conn, 200) =~ "Edit Todo Item."
+    end
+  end
+
+  defp create_todo_item(_) do
+    todo_item = fixture(:todo_item)
+    %{todo_item: todo_item}
   end
 end

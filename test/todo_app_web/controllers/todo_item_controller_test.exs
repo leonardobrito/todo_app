@@ -35,14 +35,14 @@ defmodule TodoAppWeb.TodoItemControllerTest do
   end
 
   describe "new todo_item" do
-    test "rends a form", %{conn: conn} do
+    test "rends form", %{conn: conn} do
       conn = get(conn, Routes.todo_item_path(conn, :new))
       assert html_response(conn, 200) =~ "New Todo Item."
     end
   end
 
   describe "create todo_item" do
-    test "redirect to show once a valid todo_item is created", %{conn: conn} do
+    test "redirect to show once a valid todo item is created", %{conn: conn} do
       conn = post(conn, Routes.todo_item_path(conn, :create), todo_item: @valid_todo_item_attrs)
       assert %{id: id} = redirected_params(conn)
       assert redirected_to(conn) == Routes.todo_item_path(conn, :show, id)
@@ -60,7 +60,7 @@ defmodule TodoAppWeb.TodoItemControllerTest do
   describe "edit todo_item" do
     setup([:create_todo_item])
 
-    test "renders form for editing todo_item", %{conn: conn, todo_item: todo_item} do
+    test "renders form for editing todo item", %{conn: conn, todo_item: todo_item} do
       conn = get(conn, Routes.todo_item_path(conn, :edit, todo_item))
       assert html_response(conn, 200) =~ "Edit Todo Item."
     end
@@ -90,6 +90,20 @@ defmodule TodoAppWeb.TodoItemControllerTest do
         })
 
       assert html_response(conn, 200) =~ "Edit Todo Item."
+    end
+  end
+
+  describe "delete todo_item" do
+    setup([:create_todo_item])
+
+    test "delete chosen todo item", %{conn: conn, todo_item: todo_item} do
+      conn = delete(conn, Routes.todo_item_path(conn, :delete, todo_item))
+
+      assert redirected_to(conn) == Routes.todo_item_path(conn, :index)
+
+      assert_error_sent 404, fn ->
+        get(conn, Routes.todo_item_path(conn, :show, todo_item))
+      end
     end
   end
 

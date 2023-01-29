@@ -41,4 +41,10 @@ defmodule TodoAppWeb.TodoItemController do
         render(conn, "edit.html", changeset: changeset)
     end
   end
+
+  def delete(conn, %{"id" => id}) do
+    todo_item = Todo.get_todo_item!(id)
+    {:ok, _deleted_todo_item} = Todo.delete_todo_item(todo_item)
+    redirect(conn, to: Routes.todo_item_path(conn, :index))
+  end
 end

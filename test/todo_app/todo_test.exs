@@ -49,4 +49,13 @@ defmodule TodoApp.TodoTest do
     assert updated_todo_item.body == "Some body updated"
     assert updated_todo_item.title == "Some title updated"
   end
+
+  test "delete_todo_item/1 deletes a todo_item" do
+    todo_item = todo_item_fixtures()
+    {:ok, _delete_todo_item} = Todo.delete_todo_item(todo_item)
+
+    assert_raise Ecto.NoResultsError, fn ->
+      Todo.get_todo_item!(todo_item.id)
+    end
+  end
 end

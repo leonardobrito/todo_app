@@ -23,4 +23,8 @@ defmodule TodoApp.Todo do
     |> TodoItem.changeset(attrs)
     |> Repo.update()
   end
+
+  def delete_todo_item(%TodoItem{} = todo_item) do
+    Repo.delete(todo_item)
+  end
 end

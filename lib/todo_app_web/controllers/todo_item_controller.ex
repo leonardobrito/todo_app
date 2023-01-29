@@ -21,11 +21,24 @@ defmodule TodoAppWeb.TodoItemController do
     end
   end
 
-  def show(conn, %{"id" => _id}) do
-    render(conn, "show.html")
+  def show(conn, %{"id" => id}) do
+    todo_item = Todo.get_todo_item!(id)
+    render(conn, "show.html", todo_item: todo_item)
   end
 
   def edit(conn, %{"id" => _id}) do
     render(conn, "edit.html")
+  end
+
+  def update(conn, %{"id" => id, "todo_item" => todo_item_params}) do
+    todo_item = Todo.get_todo_item!(id)
+
+    case Todo.update_todo_item(todo_item, todo_item_params) do
+      {:ok, updated_todo_item} ->
+        redirect(conn, to: Routes.todo_item_path(conn, :show, updated_todo_item))
+
+      {:error, %Ecto.Changeset{} = changeset} ->
+        render(conn, "edit.html", changeset: changeset)
+    end
   end
 end

@@ -12,6 +12,16 @@ defmodule TodoAppWeb.TodoItemControllerTest do
     title: nil
   }
 
+  @updated_todo_item_attrs %{
+    body: "Some body updated",
+    title: "Some title updated"
+  }
+
+  @updated_invalid_todo_item_attrs %{
+    body: nil,
+    title: nil
+  }
+
   def fixture(:todo_item) do
     {:ok, todo_item} = Todo.create_todo_item(@valid_todo_item_attrs)
     todo_item
@@ -52,6 +62,33 @@ defmodule TodoAppWeb.TodoItemControllerTest do
 
     test "renders form for editing todo_item", %{conn: conn, todo_item: todo_item} do
       conn = get(conn, Routes.todo_item_path(conn, :edit, todo_item))
+      assert html_response(conn, 200) =~ "Edit Todo Item."
+    end
+  end
+
+  describe "update todo_item" do
+    setup([:create_todo_item])
+
+    test "redirects when data is valid", %{conn: conn, todo_item: todo_item} do
+      conn =
+        put(conn, Routes.todo_item_path(conn, :update, todo_item), %{
+          todo_item: @updated_todo_item_attrs
+        })
+
+      assert %{id: id} = redirected_params(conn)
+      assert redirected_to(conn) == Routes.todo_item_path(conn, :show, id)
+
+      conn = get(conn, Routes.todo_item_path(conn, :show, id))
+      assert html_response(conn, 200) =~ "Some body updated"
+      assert html_response(conn, 200) =~ "Some title updated"
+    end
+
+    test "renders errors when data is invalid", %{conn: conn, todo_item: todo_item} do
+      conn =
+        put(conn, Routes.todo_item_path(conn, :update, todo_item), %{
+          todo_item: @updated_invalid_todo_item_attrs
+        })
+
       assert html_response(conn, 200) =~ "Edit Todo Item."
     end
   end

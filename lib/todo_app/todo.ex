@@ -27,4 +27,8 @@ defmodule TodoApp.Todo do
   def delete_todo_item(%TodoItem{} = todo_item) do
     Repo.delete(todo_item)
   end
+
+  def change_todo_item(%TodoItem{} = todo_item, attrs \\ %{}) do
+    TodoItem.changeset(todo_item, attrs)
+  end
 end

@@ -9,6 +9,11 @@ defmodule TodoApp.TodoTest do
     title: "Some title"
   }
 
+  @invalid_todo_item_attrs %{
+    body: nil,
+    title: nil
+  }
+
   @updated_todo_item_attrs %{
     body: "Some body updated",
     title: "Some title updated"
@@ -40,6 +45,10 @@ defmodule TodoApp.TodoTest do
     assert todo_item.title == "Some title"
   end
 
+  test "create_todo_item/1" do
+    assert {:error, %Ecto.Changeset{}} = Todo.create_todo_item(@invalid_todo_item_attrs)
+  end
+
   test "update_todo_item/2 with valid data, updates the todo_item" do
     todo_item = todo_item_fixtures()
 
@@ -57,5 +66,10 @@ defmodule TodoApp.TodoTest do
     assert_raise Ecto.NoResultsError, fn ->
       Todo.get_todo_item!(todo_item.id)
     end
+  end
+
+  test "change_todo_item/2 returns a changeset" do
+    todo_item = todo_item_fixtures()
+    assert %Ecto.Changeset{} = Todo.change_todo_item(todo_item)
   end
 end

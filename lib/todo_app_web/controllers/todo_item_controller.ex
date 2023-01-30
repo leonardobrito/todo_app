@@ -1,6 +1,7 @@
 defmodule TodoAppWeb.TodoItemController do
   use TodoAppWeb, :controller
   alias TodoApp.Todo
+  alias Todo.TodoItem
 
   def index(conn, _params) do
     todo_items = Todo.list_todo_items()
@@ -8,7 +9,8 @@ defmodule TodoAppWeb.TodoItemController do
   end
 
   def new(conn, _params) do
-    render(conn, "new.html")
+    changeset = Todo.change_todo_item(%TodoItem{})
+    render(conn, "new.html", changeset: changeset)
   end
 
   def create(conn, %{"todo_item" => todo_item_params}) do
@@ -26,8 +28,10 @@ defmodule TodoAppWeb.TodoItemController do
     render(conn, "show.html", todo_item: todo_item)
   end
 
-  def edit(conn, %{"id" => _id}) do
-    render(conn, "edit.html")
+  def edit(conn, %{"id" => id}) do
+    todo_item = Todo.get_todo_item!(id)
+    changeset = Todo.change_todo_item(todo_item)
+    render(conn, "edit.html", todo_item: todo_item, changeset: changeset)
   end
 
   def update(conn, %{"id" => id, "todo_item" => todo_item_params}) do
@@ -38,7 +42,7 @@ defmodule TodoAppWeb.TodoItemController do
         redirect(conn, to: Routes.todo_item_path(conn, :show, updated_todo_item))
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        render(conn, "edit.html", changeset: changeset)
+        render(conn, "edit.html", todo_item: todo_item, changeset: changeset)
     end
   end
 
